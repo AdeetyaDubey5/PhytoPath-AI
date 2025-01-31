@@ -5,7 +5,8 @@ This project is built using TensorFlow, Streamlit, and Transfer Learning, making
 
 # Model & Algorithm
 
-Model Used: VGG19 (Pretrained on ImageNet, Fine-Tuned)
+Model Used: VGG19 (Pretrained on ImageNet, Fine-Tuned) 
+
 Dataset: PlantVillage Dataset link: https://www.kaggle.com/datasets/emmarex/plantdisease
 Algorithm: Transfer Learning & Fine-Tuning
 Loss Function: Categorical Crossentropy
