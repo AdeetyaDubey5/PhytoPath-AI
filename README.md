@@ -8,12 +8,19 @@ This project is built using TensorFlow, Streamlit, and Transfer Learning, making
 Model Used: VGG19 (Pretrained on ImageNet, Fine-Tuned) 
 
 Dataset: PlantVillage Dataset link: https://www.kaggle.com/datasets/emmarex/plantdisease
+
 Algorithm: Transfer Learning & Fine-Tuning
+
 Loss Function: Categorical Crossentropy
+
 Optimizer: Adam
+
 Image Preprocessing:
-Resized images to 224x224
-Normalized pixel values to [0,1]
-Data Augmentation: Rotation, Zoom, Flip, Shear
+  
+  Resized images to 224x224
+  
+  Normalized pixel values to [0,1]
+  
+  Data Augmentation: Rotation, Zoom, Flip, Shear
 
 
