@@ -7,7 +7,8 @@ import streamlit as st
 
 # Get the working directory and model path
 working_dir = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(working_dir, "Model Notebook", "plant_disease_prediction_model.keras")
+model_path = os.path.join(working_dir, "plant_disease_prediction_model.keras")
+
 
 # Safely load the pre-trained model
 try:
