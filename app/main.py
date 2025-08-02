@@ -7,17 +7,36 @@ import streamlit as st
 
 # Get the working directory and model path
 working_dir = os.path.dirname(os.path.abspath(__file__))
-model_path = f"Model Notebook/plant_disease_prediction_model.keras"
+model_path = os.path.join(working_dir, "Model Notebook", "plant_disease_prediction_model.keras")
 
-# Load the pre-trained model
-model = tf.keras.models.load_model(model_path)
+# Safely load the pre-trained model
+try:
+    model = tf.keras.models.load_model(model_path)
+except Exception as e:
+    st.error(f"❗ Failed to load model: {e}")
+    st.stop()
 
 # Load the class names
-class_indices = json.load(open(f"{working_dir}/class_indices.json"))
+with open(os.path.join(working_dir, "class_indices.json")) as f:
+    class_indices = json.load(f)
+
+# Sidebar: show recognized classes, numbered
+st.sidebar.title("Recognized Crop Diseases")
+formatted_classes = []
+for idx, raw_class in class_indices.items():
+    if "___" in raw_class:
+        fruit, condition = raw_class.split("___")
+    else:
+        fruit, condition = raw_class, "Unknown"
+    fruit = fruit.replace("_", " ").replace("(", "").replace(")", "").title()
+    condition = condition.replace("_", " ").replace("(", "").replace(")", "").title()
+    formatted_classes.append(f"{fruit} - {condition}")
+for i, cls in enumerate(formatted_classes, start=1):
+    st.sidebar.markdown(f"{i}. {cls}")
 
 # Function to load and preprocess the image
 def load_and_preprocess_image(image_path, target_size=(224, 224)):
-    img = Image.open(image_path)
+    img = Image.open(image_path).convert('RGB')
     img = img.resize(target_size)
     img_array = np.array(img)
     img_array = np.expand_dims(img_array, axis=0)
@@ -30,20 +49,15 @@ def predict_image_class(model, image_path, class_indices):
     predictions = model.predict(preprocessed_img)
     predicted_class_index = np.argmax(predictions, axis=1)[0]
     raw_class_name = class_indices[str(predicted_class_index)]
-
-    # Split into fruit and condition
     if "___" in raw_class_name:
         fruit, condition = raw_class_name.split("___")
     else:
         fruit, condition = raw_class_name, "Unknown"
-
-    # Replace underscores and extra symbols, capitalize properly
     fruit = fruit.replace("_", " ").replace("(", "").replace(")", "").title()
     condition = condition.replace("_", " ").replace("(", "").replace(")", "").title()
-
     return fruit, condition
 
-# Streamlit App
+# Streamlit App UI
 st.markdown("<h1 style='text-align: center;'>PhytoPath AI</h1>", unsafe_allow_html=True)
 
 uploaded_image = st.file_uploader("Upload an image...", type=["jpg", "jpeg", "png"])
